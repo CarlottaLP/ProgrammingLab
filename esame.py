@@ -59,8 +59,6 @@ class CSVTimeSeriesFile(str):
     #ritorno
     return time_series
 
-
-
 #inserimento dati
 time_series_file=CSVTimeSeriesFile('data.csv')
 time_series=time_series_file.get_data() 
