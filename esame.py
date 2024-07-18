@@ -37,16 +37,11 @@ class CSVTimeSeriesFile(str):
                     continue
                     
                 #controllo epoch < epoch precedenti e già esistenti
-                control_epoch = 0
                 for item in epoch_list:
                     if epoch < item:
-                        control_epoch = 1
-                        raise ExamException(f"Il valore relativo a {epoch} con temperatura pari a {temperature} è fuori posto e quindi non viene considerato")
+                        raise ExamException(f"Il valore relativo all'epoch numero: {epoch} con temperatura pari a: {temperature} è fuori posto; ci sono errori nei dati")
                 if epoch in epoch_list:
-                    control_epoch = 1
-                    raise ExamException(f"Esiste un duplicato relativo a {epoch}, quindi solo il primo valore viene registrato")
-                if control_epoch == 1:
-                    continue
+                    raise ExamException(f"Esiste un duplicato relativo all'epoch numero: {epoch}; ci sono errori nei dati")
 
                 epoch_list.append(epoch)
 
@@ -65,7 +60,7 @@ class CSVTimeSeriesFile(str):
 
 
 #inserimento dati
-time_series_file = CSVTimeSeriesFile('data.csv')
+time_series_file = CSVTimeSeriesFile('prova2.csv')
 time_series = time_series_file.get_data()
 
 
@@ -78,7 +73,7 @@ def compute_daily_max_difference(list_name):
     for item in list_name:
         temperature = item[1]
         epoch = item[0]
-        day = int(epoch / 86399)
+        day = int(epoch / 86400)
 
         #controllo day diversi
         if day not in day_dict:
