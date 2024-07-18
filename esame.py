@@ -11,7 +11,7 @@ class CSVTimeSeriesFile(str):
     def get_data(self):
         try:
             my_file = open(self.file_name, 'r')
-            
+
         #non si apre il file
         except Exception:
             raise ExamException("C'è stato un errore nell'apertura del file")
@@ -23,30 +23,18 @@ class CSVTimeSeriesFile(str):
             element = line.split(',')
             if element[0] == 'epoch':
                 continue
-                
+
             else:
                 #elementi mancanti
                 if len(element) < 2:
                     continue
-                
                 try:
-                    epoch = int(element[0].strip(' '))
-                    temperature = float(element[1].strip(' '))
-                    
+                    epoch = int(element[0])
+                    temperature = float(element[1])
+
                 #errore conversione valori
                 except Exception:
-                    if len(element)>2:
-                        for item in element[1:-1]:
-                            i=element.index(item)
-                            ii=i+1
-                            try:
-                                epoch = int(element[i].strip(' '))
-                                temperature = float(element[ii].strip(' '))
-                                break
-                            except Exception:
-                                continue    
-                    if not epoch:
-                        continue
+                    continue
 
                 #controllo epoch < epoch precedenti e già esistenti
                 for item in epoch_list:

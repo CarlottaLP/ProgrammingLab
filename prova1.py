@@ -1,11 +1,121 @@
-for item in element:
-    if len(element[item:0])>2 and str(element[item])isinstance(element[item], str):
+#def eccezioni
+class ExamException(Exception):
+    pass
 
-if len(element)>2 and isinstance(element[0], str):
+class CSVTimeSeriesFile(str):
+    #def inizializzazione
+    def __init__(self, file_name):
+        self.file_name = file_name
+
+    #def funzione che prende i dati
+    def get_data(self):
+        try:
+            my_file = open(self.file_name, 'r')
+
+        #non si apre il file
+        except Exception:
+            raise ExamException("C'è stato un errore nell'apertura del file")
+
+        #liste
+        time_series = []
+        epoch_list = []
+        c=0
+        for line in my_file:
+            element = line.split(',')
+            c+=1
+            if element[0] == 'epoch':
+                continue
+
+            else:
+                #elementi mancanti
+                if len(element) < 2:
+                    continue
+
+                try:
+                    epoch = int(element[0].strip(' ').strip(','))
+                    temperature = float(element[1].strip(' ').strip(','))
+
+                #errore conversione valori
+                except Exception:
+                    if len(element)>2:
+                        for item in element[1:-1]:
+                            i=element.index(item)
+                            ii=i+1
+                            try:
+                                epoch = int(element[i].strip(' ').strip(','))
+                                temperature = float(element[ii].strip(' ').strip(','))
+                                break
+                            except Exception:
+                                continue    
+                    if not isinstance(epoch, int):
+                        continue
+
+                #controllo epoch < epoch precedenti e già esistenti
+                print(f'{c}')
+                print(f'{epoch_list}')
+                for item in epoch_list:
+                    if epoch < item:
+                        raise ExamException(f"Il valore relativo all'epoch numero: {epoch} con temperatura pari a: {temperature} è fuori posto; ci sono errori nei dati")
+                if epoch in epoch_list:
+                    raise ExamException(f"Esiste un duplicato relativo all'epoch numero: {epoch}{temperature}; ci sono errori nei dati")
+                else:
+                    epoch_list.append(epoch)
+
+                #lista finale
+                time_series.append([epoch, temperature])
+
+        #controllo liste non vuote
+        if not time_series:
+            raise ExamException("Non ci sono abbastanza dati per continuare")
+
+        #chiusura
+        my_file.close()
+
+        #ritorno
+        return time_series
 
 
+#inserimento dati
+time_series_file = CSVTimeSeriesFile('prova.csv')
+time_series = time_series_file.get_data()
 
->>> ["foo", "bar", "baz"].index("bar")
+
+#funzione differenze temperature
+def compute_daily_max_difference(list_name):
+    list_diff = []
+    day_dict = {}
+
+    #creazione dizionario giornate
+    for item in list_name:
+        temperature = item[1]
+        epoch = item[0]
+        day = int(epoch / 86400)
+
+        #controllo day diversi
+        if day not in day_dict:
+            day_dict[day] = []
+        day_dict[day].append(temperature)
+
+    #calcolo differenze
+    for item in day_dict.keys():
+        val_temp = list(day_dict[item])
+        if len(val_temp) > 1:
+            max_temp = val_temp[0]
+            min_temp = val_temp[0]
+            for item in val_temp:
+                if item < min_temp:
+                    min_temp = item
+                if item > max_temp:
+                    max_temp = item
+            diff = round(max_temp - min_temp, 1)
+            list_diff.append(diff)
+        else:  #None se c'è un solo valore
+            list_diff.append(None)
+
+    #ritorno
+    return list_diff
 
 
-float(element[((element.index(item))+1)].strip(' '))
+#con time_series
+time_series_diff = compute_daily_max_difference(time_series)
+print(f"Le differenze massime giornaliere tra le temperature registrate sono: {time_series_diff}")
