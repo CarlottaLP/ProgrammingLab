@@ -68,7 +68,6 @@ class CSVTimeSeriesFile(str):
         my_file.close()
 
         #ritorno
-        print(f'{time_series}')
         return time_series
 
 
