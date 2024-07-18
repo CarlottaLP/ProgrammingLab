@@ -68,6 +68,7 @@ class CSVTimeSeriesFile(str):
 time_series_file = CSVTimeSeriesFile('data.csv')
 time_series = time_series_file.get_data()
 
+
 #funzione differenze temperature
 def compute_daily_max_difference(list_name):
     list_diff = []
