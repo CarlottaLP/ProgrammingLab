@@ -39,10 +39,9 @@ class CSVTimeSeriesFile(str):
                         for item in element[1:-1]:
                             i=element.index(item)
                             ii=i+1
-                            print(f'{i}')
                             try:
-                                epoch = int(element[i])
-                                temperature = float(element[ii])
+                                epoch = int(element[i].strip(' '))
+                                temperature = float(element[ii].strip(' '))
                                 break
                             except Exception:
                                 continue    
@@ -74,7 +73,7 @@ class CSVTimeSeriesFile(str):
 
 
 #inserimento dati
-time_series_file = CSVTimeSeriesFile('prova2.csv')
+time_series_file = CSVTimeSeriesFile('data.csv')
 time_series = time_series_file.get_data()
 
 
