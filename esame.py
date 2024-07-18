@@ -28,6 +28,7 @@ class CSVTimeSeriesFile(str):
                 #elementi mancanti
                 if len(element) < 2:
                     continue
+                    
                 try:
                     epoch = int(element[0])
                     temperature = float(element[1])
@@ -35,7 +36,7 @@ class CSVTimeSeriesFile(str):
                 #errore conversione valori
                 except Exception:
                     continue
-                    
+
                 #controllo epoch < epoch precedenti e già esistenti
                 for item in epoch_list:
                     if epoch < item:
