@@ -28,14 +28,26 @@ class CSVTimeSeriesFile(str):
                 #elementi mancanti
                 if len(element) < 2:
                     continue
-                    
+                
                 try:
-                    epoch = int(element[0])
-                    temperature = float(element[1])
+                    epoch = int(element[0].strip(' '))
+                    temperature = float(element[1].strip(' '))
                     
                 #errore conversione valori
                 except Exception:
-                    continue
+                    if len(element)>2:
+                        for item in element[1:-1]:
+                            i=element.index(item)
+                            ii=i+1
+                            print(f'{i}')
+                            try:
+                                epoch = int(element[i])
+                                temperature = float(element[ii])
+                                break
+                            except Exception:
+                                continue    
+                    if not epoch:
+                        continue
 
                 #controllo epoch < epoch precedenti e già esistenti
                 for item in epoch_list:
@@ -57,6 +69,7 @@ class CSVTimeSeriesFile(str):
         my_file.close()
 
         #ritorno
+        print(f'{time_series}')
         return time_series
 
 
