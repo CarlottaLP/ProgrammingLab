@@ -59,10 +59,8 @@ class CSVTimeSeriesFile(str):
     #ritorno
     return time_series
 
-
-
 #inserimento dati
-time_series_file=CSVTimeSeriesFile('data.csv')
+time_series_file=CSVTimeSeriesFile('prova.csv')
 time_series=time_series_file.get_data() 
 
 #funzione differenze temperature
@@ -74,7 +72,7 @@ def compute_daily_max_difference(list_name):
   for item in list_name:
     temperature=item[1]
     epoch=item[0]
-    day=int(epoch/86399)
+    day=int(epoch/86400)
 
     #controllo day diversi
     if day not in day_dict:
